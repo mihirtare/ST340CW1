@@ -1,0 +1,72 @@
+---
+title: "ST340CW1Mihir"
+author: "u1729346"
+date: "22/10/2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Question 1
+
+```{r merge}
+mergeLR <- function(a, b){
+  ret <- numeric(length(a) + length(b))
+  i <- 1
+  j <- 1
+  k <- 1
+  while(i <= length(a) || j <= length((b))) {
+    if(i <= length(a) && j <= length((b))){
+      if(a[i] < b[j]){
+        ret[k] <- a[i]
+        i <- i + 1
+        k <- k + 1
+      }
+      else{
+        ret[k] <- b[j]
+        j <- j + 1
+        k <- k + 1
+      }
+    }
+    else if(i <= length(a)){
+      ret[k] <- a[i]
+      k <- k + 1
+      i <- i + 1 
+    }
+    else if(j <= length(b)){
+      ret[k] <- b[j]
+      k <- k + 1
+      j <- j + 1     
+    }
+  }
+  return(ret)
+}
+```
+
+```{r mergesort}
+mergesort <- function(a){
+  if(length(a) == 1){
+    return(a)
+  }
+  else{
+    mid <- floor(length(a)/2)
+    left <- numeric(mid)
+    right <- numeric(length(a) - mid)
+    for(i in 1:length(left)){
+      left[i] <- a[i]
+      }
+    for(j in 1:length(right)){
+      right[j] <- a[j + mid]
+    }
+    return(mergeLR(mergesort(left), mergesort(right)))
+  }
+}
+```
+
+```{r test}
+input <- c(1,2,2.34,2000,-12,-5,9)
+print(mergesort(input))
+```
+
