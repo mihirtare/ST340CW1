@@ -85,7 +85,7 @@ $$right = a[mid+1],...,a[k+1]$$
 
 Since $\lfloor{\frac{k+1}{2}}\rfloor \leq k$ and $k+1-(\lfloor{\frac{k+1}{2}}\rfloor + 1) = k - \lfloor{\frac{k+1}{2}}\rfloor<k$, left and right will be correctly sorted by mergesort as assumed in our inductive hypothesis. We must show that mergeLR correctly outputs a sorted array when called upon left and right.
 
-Proposition: mergeLR correctly returns a single array with the elements of the two input arrays in sorted order. Suppose left and right are two arrays with lengths p and q respectively and the algorithm is on its $k^{th}$ 
+Proposition: mergeLR correctly returns a single array with the elements of the two input arrays in sorted order. Suppose left and right are two arrays with lengths p and q respectively and the algorithm is on its $k^{th}$ iteration.
 
 Base Case: When $k =1$, 
 $$ret = concat(min\{left[1],right[1]\}, max\{left[1],right[1]\})$$
@@ -93,4 +93,13 @@ Hence, the returned array is in correct sorted order.
 
 Inductive Hypothesis: For arbitrary $k$, the returned merged array is correctly sorted. i.e. $ret[1] \leq ...\leq ret[k]$. 
 
-Inductive Step: 
+Inductive Step: For the $(k+1)^{th}$ iteration, suppose i is an index running through left, s.t. $1\leq i\leq p$ and j is an index running through right, s.t. $1\leq j\leq q$. Assume $left[i]\leq right[j]$ such that $ret[k] = left[i]$ and using the inductive hypothesis, we have $ret[1] \leq ...\leq ret[k]$. Considering the assumed case, 
+$$ret[k+1] = min\{left[i+1], right[j]\}$$
+$$\implies ret[1]\leq ...\leq ret[k]\leq ret[k+1]$$
+since $left[i]\leq left[i+1]\leq right[j]$ and in the case where $i+1 > p$, the if condition fails and the else if condition $j\leq length(right)$ is activated, where
+$$ret[k+1] = right[j],...,ret[p+q]=right[q]$$
+and since right was already sorted, we have
+$$ret[k+1]\leq ...\leq ret[p+q]$$
+and hence the merged array is correctly sorted.
+
+For the case when $right[j] < left[i]$, the proof is identical due to the symmetry of the problem.
