@@ -70,3 +70,27 @@ input <- c(1,2,2.34,2000,-12,-5,9)
 print(mergesort(input))
 ```
 
+#### Mergesort Correctness
+
+Proposition: Mergesort correctly sorts an array ($a[1],...,a[n]$) of size n.
+
+Base Case: When $n=1$, $a[1]$ is sorted by default since it contains only one element. 
+
+Inductive Hypothesis: When $n=k$, the array is correctly sorted by mergesort. i.e. $a[1]\leq ... \leq a[k]$.
+
+Inductive Step: When $n=k+1$,
+$$mid=\lfloor{\frac{k+1}{2}}\rfloor$$
+$$left = a[1],...,a[mid]$$
+$$right = a[mid+1],...,a[k+1]$$
+
+Since $\lfloor{\frac{k+1}{2}}\rfloor \leq k$ and $k+1-(\lfloor{\frac{k+1}{2}}\rfloor + 1) = k - \lfloor{\frac{k+1}{2}}\rfloor<k$, left and right will be correctly sorted by mergesort as assumed in our inductive hypothesis. We must show that mergeLR correctly outputs a sorted array when called upon left and right.
+
+Proposition: mergeLR correctly returns a single array with the elements of the two input arrays in sorted order. Suppose left and right are two arrays with lengths p and q respectively and the algorithm is on its $k^{th}$ 
+
+Base Case: When $k =1$, 
+$$ret = concat(min\{left[1],right[1]\}, max\{left[1],right[1]\})$$
+Hence, the returned array is in correct sorted order.
+
+Inductive Hypothesis: For arbitrary $k$, the returned merged array is correctly sorted. i.e. $ret[1] \leq ...\leq ret[k]$. 
+
+Inductive Step: 
