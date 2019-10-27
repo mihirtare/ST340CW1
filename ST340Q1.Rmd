@@ -12,37 +12,43 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Question 1a: Merge Implementation
 
 ```{r merge}
-mergeLR <- function(a, b){
-  ret <- numeric(length(a) + length(b))
+mergeLR <- function(left, right){
+  ret <- numeric(length(left) + length(right))
   i <- 1
   j <- 1
   k <- 1
-  while(i <= length(a) || j <= length((b))) {
-    if(i <= length(a) && j <= length((b))){
-      if(a[i] < b[j]){
-        ret[k] <- a[i]
+  while(i <= length(left) || j <= length((right))) {
+    if(i <= length(left) && j <= length((right))){
+      if(left[i] < right[j]){
+        ret[k] <- left[i]
         i <- i + 1
         k <- k + 1
       }
       else{
-        ret[k] <- b[j]
+        ret[k] <- right[j]
         j <- j + 1
         k <- k + 1
       }
     }
-    else if(i <= length(a)){
-      ret[k] <- a[i]
+    else if(i <= length(left)){
+      ret[k] <- left[i]
       k <- k + 1
       i <- i + 1 
     }
-    else if(j <= length(b)){
-      ret[k] <- b[j]
+    else if(j <= length(right)){
+      ret[k] <- right[j]
       k <- k + 1
       j <- j + 1     
     }
   }
   return(ret)
 }
+```
+\textbf{Merge Test}:
+```{r testm}
+left <- c(1,2,2.34)
+right <- c(-12,-5,9,2000)
+print(mergeLR(left,right))
 ```
 
 ### Question 1b: Mergesort Implementation
@@ -66,8 +72,8 @@ mergesort <- function(a){
   }
 }
 ```
-
-```{r test}
+\textbf{MergeSort Test}:
+```{r testms}
 input <- c(1,2,2.34,2000,-12,-5,9)
 print(mergesort(input))
 ```
@@ -108,10 +114,25 @@ For the case when $right[j] < left[i]$, the proof is identical due to the symmet
 
 ### Question 1d: Mergesort Runtime 
 
-Given $T(n)$ is the total number of comparisons made by mergesort on an input of size n
-Given an array of size n, mergesort is recursively called upon two equal halves (since array is assumed even) and once each half is of size 1, merge is executed $\Theta(n)$ times, until the original array size is attained. Hence, we arrive at the recurrence equation given by:
+Given an array of size n, mergesort is recursively called upon two equal halves (since array is assumed even) and once each half is of size 1, merge is executed $O(n)$ times, until the original array size is attained. Hence, we arrive at the recurrence equation given by:
 $$T(1) = 1,$$
-$$T(n) = 2T(\frac{n}{2}) + \Theta(n),  n > 1$$
+$$T(n) = 2T(\frac{n}{2}) + O(n),\;\;\; n > 1$$
+\textbf{Proposition}: $T(n) \leq n\log_{2}(n), \;\; \forall n\in\{2^{k}:k\in \mathbb{N}\}$
+
+\textbf{Base Case}: $n = 2^{1}$
+$$T(2) = 2T(1) + O(2) = 2 \leq 2\log_{2}(2) = 2$$
+Hence, the base case is true.
+ 
+\textbf{Inductive Hypothesis}: Assume true for $n = 2^{k}$:
+$$T(2^{k}) = 2T(\frac{2^{k}}{2}) + O(2^{k}) $$
+$$\;\; = 2T(2^{k-1}) + O(2^{k}) \leq 2^{k}log_{2}(2^{k})$$
+
+\textbf{Inductive Step}: For $n = 2^{k+1}$:
+$$T(2^{k+1}) = 2T(\frac{2^{k+1}}{2}) + O(2^{k+1})$$
+$$\;\; = 2T(2^{k}) + O(2^{k+1})$$
+using our inductive hypothesis, we have:
+$$\;\; \leq 2^{k+1}\log_{2}(2^{k+1}))$$
+and hence the proposition stands $\forall n \in \{2^{k}: k \in \mathbb{N}\}$.
 
 ### Question 1e: Quicksort vs Mergesort
 
