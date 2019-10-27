@@ -137,3 +137,74 @@ and hence the proposition stands $\forall n \in \{2^{k}: k \in \mathbb{N}\}$.
 ### Question 1e: Quicksort vs Mergesort
 
 Quicksort and Mergesort are both divide and conquer based sorting strategies. Quicksort uses a pivot (either chosen naively or by other methods such as median) to partition the array whereas Mergesort always partitions the array into halves. This results in Mergesort having a worst-case time complexity of $O(n\log(n))$. A scenario where the array is sorted in descending order results in Quicksort's worst-case time complexity of $O(n^{2})$. Hence, Mergesort is faster and more efficient than Quicksort.
+
+## Question 2
+## Majority element  
+
+```{r majorityElement}
+
+majElement <- function(myData)
+{
+  if (length(myData) == 1)
+  {
+    return(myData)
+  }
+  left <- myData[1:floor(length(myData)/2)]
+  right <- myData[(floor(length(myData)/2)+1):length(myData)]
+  majLeft <- majElement(left)#Recursive call 1
+  majRight <- majElement(right)#Recursive call 2
+  count<-0
+  if(majLeft != "No Majority")
+  {
+    count <- length(myData[myData==majLeft])
+    for(each in 1:count) #First n equivalence relations
+    {
+        if(each == (length(myData)/2)+1)
+        {
+          return(majLeft)
+        }
+    }
+  }
+  count <- 0
+  if(majRight != "No Majority")
+  {
+    count <- length(myData[myData==majRight])
+    for(each in 1:count) #Second n equivalence relations
+    {
+       if(each == (length(myData)/2)+1)
+       {
+         return(majRight)
+       }
+    }
+  }
+  return("No Majority")
+}
+```
+
+### 2A:
+The program works by splitting the input list into two sublists, then calling itself recursively on each of the two sublists. If the provided list is of length 1, it returns the element, which must be the majority element. The principle of the solution is that if a majority element exists then it must be the majority element of at least one of the two sublists. Likewise, if neither sublist has a majority element then the superlist cannot have a majority element*. The returned values from the recursive call form a set of at most 2 potential majority elements. We may then count the elements to identify the majority element. Because the problem statement does not allow the use of ">" or "<", identifying if the count of a given element is sufficent to make it the majority requires checking if each natural number up to the count is equal to the required number of elements. 
+
+*Proof: Suppose the list has length $n$. Then the majority element must have at least $\frac{n}{2} + 1$ instances. If the statement does not hold then there must exist some a and b such that a + b =  $\frac{n}{2} + 1$ and a $\leq$ b < $\frac{n}{4}$ + $\frac{1}{2}$. However the right equation can be rearranged to a + b < $\frac{n}{2} + 1$, violating the left equation. Therefore the statement must hold.
+
+### 2B:
+We have that the algorithm will split a given input list into two lists, each half the size, and call itself again. We also have that there will be 2n equivalence relations per call of the function, where n is the length of the input list. Since we have $n \in \{2^k : k \in N \}$ we may prove an upper bound on the number of equivalence relations of the algorithm using induction on k.
+
+Thus we have that T(n) is equal to $2n + 2*T(\frac{n}{2})$. Proof $2n\log_{2}n$ is an upper bound:
+
+Proof for k = 1:
+
+$T(2^k) = T(2) = 2*2 + 2*(0) = 4 \leq 2(2)\log_{2}2$
+
+Inductive step:
+
+Suppose the statement is true for k = x. For k = x+1:
+
+$$\begin{aligned} T(2^{x+1}) &= 2*2^{x+1} + 2*T(x)\\
+            &= 2*2^{x+1} + 2*(2*2^{x}\log_{2}2^{x})\\
+            &= 2*2^{x+1}(1 + \log_{2}2^{x})\\
+            &= 2*2^{x+1}(1 + \log_{2}2^{x+1} - 1)\\
+            &= 2*2^{x+1}(\log_{2}2^{x+1})\\
+            \square 
+            \end{aligned}$$
+
+Therefore $2n\log_{2}n$ is an upper bound for all $n \in \{2^k : k \in N \}$.
